@@ -1,0 +1,27 @@
+# modules
+node_modules/
+
+# temp
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# binary
+*.exe
+
+# build
+build/
+dist/
+cjs/
+esm/
+
+# folders
+package/
+_*/
+
+# macos
+.DS_Store
+
+# secrets
+.env
+.env.*
+!.env.example

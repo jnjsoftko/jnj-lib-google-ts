@@ -1,0 +1,11 @@
+# folders
+package/
+_*/
+
+# macos
+.DS_Store
+
+# secrets
+.env
+.env.*
+!.env.example
