@@ -131,15 +131,15 @@ export class GoogleSheet {
   };
 }
 
-// & TEST
-// const gs = new GoogleSheet('mooninlearn');
+// // & TEST
+// const gs = new GoogleSheet("mooninlearn");
 
 // // * Get Values
-// const range = 'A2:B5';
-// const sheetName = 'Sheet1';
-// const spreadsheetId = '14HsVYROe_RDI2zg6C1S8uAYUen4a7wIh0_p7VTtxn-A';
-// const values = await gs.getValues(range, sheetName, spreadsheetId);
-// console.log('values', values);
+// const range = "A2:B5";
+// const sheetName = "Sheet1";
+// const spreadsheetId = "14HsVYROe_RDI2zg6C1S8uAYUen4a7wIh0_p7VTtxn-A";
+// const values = await gs.getValues({ range, sheetName, spreadsheetId });
+// console.log("values", values);
 
 // // * Set Values
 // const start = 'F5';

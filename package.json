@@ -25,6 +25,7 @@
   "author": "Jnj Soft Ko <jnjsoft.ko@gmail.com>",
   "dependencies": {
     "@google-cloud/local-auth": "^2.1.0",
+    "@octokit/rest": "^20.0.1",
     "googleapis": "^105.0.0"
   }
 }
