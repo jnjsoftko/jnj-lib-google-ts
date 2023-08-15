@@ -100,7 +100,9 @@ const arrToCell = (arr = [2, 4]) => {
 function cellToArr(cell = "A1") {
   if (Array.isArray(cell)) return cell;
 
-  const [, columnName, row] = cell.toUpperCase().match(/([A-Z]+)([0-9]+)/);
+  // let [_, columnName, row] = cell.toUpperCase().match(/([A-Z]+)([0-9]+)/);
+  const matched: RegExpMatchArray | null = cell.toUpperCase().match(/([A-Z]+)([0-9]+)/);
+  const [_, columnName, row] = matched!;
   const characters = "Z".charCodeAt(0) - "A".charCodeAt(0) + 1;
 
   let columnNum = 0;
