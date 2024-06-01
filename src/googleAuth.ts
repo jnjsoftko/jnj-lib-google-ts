@@ -74,7 +74,6 @@ export class GoogleAuth {
    */
   async loadSavedCredentialsIfExist() {
     try {
-      // return await google.auth.fromJSON(loadJson(this.tokenPath)); // ! `JSON.parse`를 2번 사용해야 하는 이유 확인 필요
       return await google.auth.fromJSON(JSON.parse(loadJson(this.tokenPath))); // ! `JSON.parse`를 2번 사용해야 하는 이유 확인 필요
     } catch (err) {
       // console.log(err);
