@@ -9,11 +9,14 @@ vite.config.ts.timestamp-*
 *.exe
 
 # build
-# build
 build/
 dist/
-cjs/
-esm/
+cjs/*
+!tsconfig.json
+!package.json
+esm/*
+!tsconfig.json
+!package.json
 
 # folders
 package/
