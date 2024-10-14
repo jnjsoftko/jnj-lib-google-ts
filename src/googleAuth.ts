@@ -42,7 +42,7 @@ const settingsPath = process.env.DEV_SETTINGS ?? "C:/JnJ-soft/Developments/_Sett
 
 const getScopes = (user = "bigwhitekmc", sn = 0) => {
   const path = Path.join(settingsPath!, `Apis/google/spec/scopes_${user}_${sn}.json`);
-  let scopes = loadJson(Path.join(settingsPath!, `Apis/google/spec/scopes_${user}_${sn}.json`));
+  let scopes = loadJson(path);
   return scopes ?? loadJson(Path.join(settingsPath!, `Apis/google/spec/scopes_default.json`));
 };
 
@@ -74,9 +74,8 @@ export class GoogleAuth {
    */
   async loadSavedCredentialsIfExist() {
     try {
-      return await google.auth.fromJSON(JSON.parse(loadJson(this.tokenPath))); // ! `JSON.parse`를 2번 사용해야 하는 이유 확인 필요
+      return await google.auth.fromJSON(JSON.parse(loadJson(this.tokenPath)));
     } catch (err) {
-      // console.log(err);
       return null;
     }
   }
@@ -104,8 +103,13 @@ export class GoogleAuth {
    */
   async authorize() {
     let client: any = await this.loadSavedCredentialsIfExist();
-    // console.log('@@@@client', client);
     if (client) {
+      // Check if the token is expired
+      const isExpired = client.credentials.expiry_date && Date.now() >= client.credentials.expiry_date;
+      if (isExpired) {
+        console.log("Token has expired, refreshing...");
+        client = await this.refreshAccessToken(client);
+      }
       return client;
     }
     client = await authenticate({
@@ -117,10 +121,18 @@ export class GoogleAuth {
     }
     return client;
   }
+
+  async refreshAccessToken(client: any) {
+    const { token } = await client.getAccessToken();
+    client.credentials.access_token = token;
+    client.credentials.expiry_date = Date.now() + 3600 * 1000; // 1 hour from now
+    await this.saveCredentials(client);
+    return client;
+  }
 }
 
-// & Test AREA
-// &---------------------------------------------------------------------------
+// // & Test AREA
+// // &---------------------------------------------------------------------------
 // const googleAPI = new GoogleAuth("bigwhitekmc", "oauth2");
 
 // // * 인증 TEST
