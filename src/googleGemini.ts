@@ -28,7 +28,7 @@
 import Path from "path";
 
 // ? External Modules
-import dotenv from "dotenv";
+// // import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // ? UserMade Modules
@@ -37,9 +37,10 @@ import { loadYaml } from "jnj-lib-doc";
 
 // & Variable AREA
 // &---------------------------------------------------------------------------
-dotenv.config(); // 실행 경로에 있는 `.env`
+// // dotenv.config(); // 실행 경로에 있는 `.env`
 
-const settingsPath = process.env.DEV_SETTINGS ?? "C:/JnJ-soft/Developments/_Settings";
+// const settingsPath = process.env.DEV_SETTINGS ?? "C:/JnJ-soft/Developments/_Settings";
+const settingsPath = process.env.DEV_SETTINGS ?? "/home/sam/JnJ-soft/Developments/_Settings";
 
 const accounts: any = loadYaml(`${settingsPath}/Apis/ai/gemini/accounts.yaml`);
 

@@ -29,16 +29,16 @@ import Path from "path";
 // ? External Modules
 import { authenticate } from "@google-cloud/local-auth";
 import { google } from "googleapis";
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 
 // ? UserMade Modules
 import { loadJson, saveJson } from "jnj-lib-base";
 
 // & Variable AREA
 // &---------------------------------------------------------------------------
-dotenv.config(); // 실행 경로에 있는 `.env`
+// dotenv.config(); // 실행 경로에 있는 `.env`
 
-const settingsPath = process.env.DEV_SETTINGS ?? "C:/JnJ-soft/Developments/_Settings";
+const settingsPath = process.env.DEV_SETTINGS ?? "/home/sam/JnJ-soft/Developments/_Settings";
 
 const getScopes = (user = "bigwhitekmc", sn = 0) => {
   const path = Path.join(settingsPath!, `Apis/google/spec/scopes_${user}_${sn}.json`);

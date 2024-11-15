@@ -220,6 +220,90 @@ export class Youtube {
     }
     return dicts;
   }
+
+  async myPlaylists_(): Promise<any[]> {
+    const playlists: any[] = [];
+    let nextPageToken: string | null | undefined;
+
+    do {
+      const response = await this.service.playlists.list({
+        part: "snippet,contentDetails".split(","),
+        mine: true,
+        maxResults: 50,
+        pageToken: nextPageToken || undefined,
+      });
+
+      playlists.push(...(response.data.items as any[]));
+      nextPageToken = response.data.nextPageToken || undefined;
+    } while (nextPageToken);
+
+    return playlists;
+  }
+
+  async myPlaylists(thumbnail = "high"): Promise<any[]> {
+    const dicts: any[] = [];
+    for (const item of await this.myPlaylists_()) {
+      const dct = { playlistId: item["id"], itemCount: 0 };
+      Object.assign(dct, flattenSnippet(item["snippet"], snippetKeys.concat(["title_ko", "description_ko"]), thumbnail));
+      dct["itemCount"] = item["contentDetails"]["itemCount"];
+      dicts.push(dct);
+    }
+    return dicts;
+  }
+
+  async getWatchLaterPlaylistId(): Promise<string | null> {
+    try {
+      const response = await this.service.channels.list({
+        part: "contentDetails",
+        mine: true,
+      });
+
+      if (response.data.items && response.data.items.length > 0) {
+        return response.data.items[0].contentDetails.relatedPlaylists.watchLater;
+      }
+      return null;
+    } catch (error) {
+      console.error("'나중에 볼 동영상' 플레이리스트 ID 가져오기 오류:", error);
+      return null;
+    }
+  }
+
+  async getWatchLaterVideos(maxResults = 50): Promise<any[]> {
+    const watchLaterPlaylistId = await this.getWatchLaterPlaylistId();
+    if (!watchLaterPlaylistId) {
+      console.error("'나중에 볼 동영상' 플레이리스트 ID를 가져올 수 없습니다.");
+      return [];
+    }
+
+    try {
+      const videos = await this.videosByPlaylist(watchLaterPlaylistId);
+      return videos.slice(0, maxResults); // maxResults 개수만큼만 반환
+    } catch (error) {
+      console.error("'나중에 볼 동영상' 가져오기 오류:", error);
+      return [];
+    }
+  }
+
+  async getMyChannelId(): Promise<string | null> {
+    try {
+      const response = await this.service.channels.list({
+        part: "id,snippet".split(","),
+        mine: true,
+      });
+
+      if (response.data.items && response.data.items.length > 0) {
+        const channelId = response.data.items[0].id;
+        console.log("Your channel ID is:", channelId);
+        return channelId;
+      } else {
+        console.log("No channel found.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching channel ID:", error);
+      return null;
+    }
+  }
 }
 
 // & Test AREA
@@ -247,3 +331,26 @@ export class Youtube {
 // // const videos = await youtube.videosByPlaylist(playlistId);
 // // // console.log(videos);
 // // console.log(videos.length);
+
+// async function testWatchLater() {
+//   const youtube = new Youtube("bigwhitekmc");
+//   await youtube.init();
+
+//   console.log("'나중에 볼 동영상' 가져오기 시작...");
+//   const watchLaterVideos = await youtube.getWatchLaterVideos();
+//   console.log("'나중에 볼 동영상' 목록:", watchLaterVideos);
+//   console.log("'나중에 볼 동영상' 수:", watchLaterVideos.length);
+// }
+
+// testWatchLater().catch(console.error);
+
+// async function testGetMyChannelId() {
+//   const youtube = new Youtube("bigwhitekmc");
+//   await youtube.init();
+
+//   console.log("내 채널 ID 가져오기 시작...");
+//   const myChannelId = await youtube.getMyChannelId();
+//   console.log("내 채널 ID:", myChannelId);
+// }
+
+// testGetMyChannelId().catch(console.error);
