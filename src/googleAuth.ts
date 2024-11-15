@@ -93,6 +93,7 @@ export class GoogleAuth {
       type: "authorized_user",
       client_id: key.client_id,
       client_secret: key.client_secret,
+      expiry_date: client.credentials.expiry_date,
       refresh_token: client.credentials.refresh_token,
     });
     saveJson(this.tokenPath, payload);
